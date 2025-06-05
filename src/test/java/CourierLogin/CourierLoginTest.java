@@ -84,7 +84,7 @@ public class CourierLoginTest {
     @Test
     @DisplayName("Checking log in with the valid data")
     public void loginWithTheValidDataTest(){
-        courierData = new CourierData("Baskov1", "112233", "Nikolay");
+        courierData = new CourierData("Baskov13", "112233", "Nikolay");
         createCourier();
         loginAndGetCourierId();
     }
