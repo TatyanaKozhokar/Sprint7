@@ -4,12 +4,14 @@ package tests.order;
 import api.OrderApi;
 import data.OrderData;
 import data.OrderTrack;
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import net.datafaker.Faker;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,13 +107,15 @@ public class CreateANewOrderTest {
     public OrderTrack createAnOrder() {
         Response response = OrderApi.createAnOrder(orderData);
         return response.then()
-                .statusCode(201)
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract()
                 .as(OrderTrack.class);
     }
 
     @Test
     @DisplayName("Create an order")
+    @Description("Создание заказа с разными тестовыми данными, проверяется возможность выбора одного цвета, " +
+            "двух цветов и возможность не выбирать цвет вообще")
     public void creatingAnOrder() {
         trackNumber = createAnOrder().getNumber();
         assertThat(trackNumber, notNullValue());
@@ -122,7 +126,7 @@ public class CreateANewOrderTest {
         if (trackNumber != 0) {
             Response response = OrderApi.deleteAnOrder(trackNumber);
             response.then()
-                    .statusCode(200)
+                    .statusCode(HttpStatus.SC_OK)
                     .body("ok", equalTo(true));
 
         }
