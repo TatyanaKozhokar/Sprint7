@@ -78,7 +78,7 @@ public class CourierLoginTest {
     @DisplayName("Attempt to log in when the field Login is empty")
     @Description("Проверка возможности залогиниться с пустым полем Логин")
     public void attemptToLogInWhenTheFieldLoginIsEmpty() {
-        courierWithTheWrongData = new CourierData(null, "112233", "Nikolay");
+        courierWithTheWrongData = new CourierData(null, courierData.getPassword(), courierData.getFirstname());
         requestWithoutRequiredField();
     }
 
