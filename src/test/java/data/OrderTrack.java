@@ -1,4 +1,4 @@
-package order;
+package data;
 
 public class OrderTrack {
     public String getTrack() {

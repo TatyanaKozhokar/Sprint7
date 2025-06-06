@@ -1,11 +1,12 @@
-package order;
+package tests.order;
 
+import api.OrderApi;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class ListOfTheOrdersTest {
@@ -17,11 +18,9 @@ public class ListOfTheOrdersTest {
 
     @Test
     @DisplayName("Getting the List of the orders")
-    public void gettingTheListOfTheOrders(){
-        given()
-                .when()
-                .get("/api/v1/orders")
-                .then()
+    public void gettingTheListOfTheOrders() {
+        Response response = OrderApi.gettingTheListOfTheOrders();
+        response.then()
                 .statusCode(200)
                 .body("orders", notNullValue());
 

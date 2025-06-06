@@ -1,21 +1,27 @@
-package order;
+package tests.order;
 
 
+import api.OrderApi;
+import data.OrderData;
+import data.OrderTrack;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import net.datafaker.Faker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,12 +29,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(Parameterized.class)
 public class CreateANewOrderTest {
+    static Faker faker = new Faker();
     private int trackNumber;
     private final OrderData orderData;
 
     public CreateANewOrderTest(String firstName, String lastName, String address,
-                     int metroStation, String phone, int rentTime,
-                     String deliveryDate, String comment, List<String> color) {
+                               int metroStation, String phone, int rentTime,
+                               String deliveryDate, String comment, List<String> color) {
         this.orderData = new OrderData(
                 firstName, lastName, address, metroStation,
                 phone, rentTime, deliveryDate, comment, color
@@ -37,38 +44,51 @@ public class CreateANewOrderTest {
 
     @Parameterized.Parameters(name = "Тестовые данные: {0} {1}")
     public static Collection<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return Arrays.asList(new Object[][]{
                 {
-                        "Oleg",
-                        "Gazmanow",
-                        "Kremlin",
-                        4,
-                        "+7 800 555 35 35",
-                        5,
-                        "2020-06-06",
-                        "Ya yasnie dni ostavil sebe",
+                        faker.name().firstName(),
+                        faker.name().lastName(),
+                        faker.address().streetAddress(),
+                        faker.number().numberBetween(1, 50),
+                        faker.phoneNumber().phoneNumber(),
+                        faker.number().numberBetween(1, 10),
+                        sdf.format(faker.date().future(30, TimeUnit.DAYS)),
+                        faker.lorem().sentence(),
                         List.of("BLACK")
+                },
+                {
+                        faker.name().firstName(),
+                        faker.name().lastName(),
+                        faker.address().streetAddress(),
+                        faker.number().numberBetween(1, 50),
+                        faker.phoneNumber().phoneNumber(),
+                        faker.number().numberBetween(1, 10),
+                        sdf.format(faker.date().future(30, TimeUnit.DAYS)),
+                        faker.lorem().sentence(),
+                        List.of("GREY")
                 },
 
                 {
-                        "Oleg",
-                        "Gazmanow",
-                        "Kremlin",
-                        4,
-                        "+7 800 555 35 35",
-                        5,
-                        "2020-06-06",
-                        "Ya yasnie dni ostavil sebe",
+                        faker.name().firstName(),
+                        faker.name().lastName(),
+                        faker.address().streetAddress(),
+                        faker.number().numberBetween(1, 50),
+                        faker.phoneNumber().phoneNumber(),
+                        faker.number().numberBetween(1, 10),
+                        sdf.format(faker.date().future(30, TimeUnit.DAYS)),
+                        faker.lorem().sentence(),
                         List.of("BLACK", "GRAY")
                 },
                 {
-                        "Oleg",
-                        "Gazmanow",
-                        "Kremlin",
-                        "+7 800 555 35 35",
-                        5,
-                        "2020-06-06",
-                        "Ya yasnie dni ostavil sebe",
+                        faker.name().firstName(),
+                        faker.name().lastName(),
+                        faker.address().streetAddress(),
+                        faker.number().numberBetween(1, 50),
+                        faker.phoneNumber().phoneNumber(),
+                        faker.number().numberBetween(1, 10),
+                        sdf.format(faker.date().future(30, TimeUnit.DAYS)),
+                        faker.lorem().sentence(),
                         null
                 }
         });
@@ -82,38 +102,26 @@ public class CreateANewOrderTest {
     }
 
     @Step("Creating an Order")
-    public void createAnOrder(){
-        OrderTrack orderTrack =
-            given()
-                    .header("Content-type", "application/json")
-                    .and()
-                    .body(orderData)
-                    .when()
-                    .post("/api/v1/orders")
-                    .then()
-                    .statusCode(201)
-                    .extract()
-                    .as(OrderTrack.class);
-        trackNumber = orderTrack.getNumber();
-        assertThat(trackNumber, notNullValue());
+    public OrderTrack createAnOrder() {
+        Response response = OrderApi.createAnOrder(orderData);
+        return response.then()
+                .statusCode(201)
+                .extract()
+                .as(OrderTrack.class);
     }
 
     @Test
     @DisplayName("Create an order")
-    public void creatingAnOrder(){
-        createAnOrder();
+    public void creatingAnOrder() {
+        trackNumber = createAnOrder().getNumber();
+        assertThat(trackNumber, notNullValue());
     }
 
     @After
-    public void deleteAnOrder(){
-        if (trackNumber!=0){
-            given()
-                    .header("Content-type", "application/json")
-                    .and()
-                    .body(trackNumber)
-                    .when()
-                    .put("/api/v1/orders/cancel")
-                    .then()
+    public void deleteAnOrder() {
+        if (trackNumber != 0) {
+            Response response = OrderApi.deleteAnOrder(trackNumber);
+            response.then()
                     .statusCode(200)
                     .body("ok", equalTo(true));
 

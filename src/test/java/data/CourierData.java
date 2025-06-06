@@ -1,4 +1,4 @@
-package courier.data;
+package data;
 
 public class CourierData {
 
