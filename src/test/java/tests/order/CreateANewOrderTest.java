@@ -1,6 +1,7 @@
 package tests.order;
 
 
+import api.ApiConfig;
 import api.OrderApi;
 import data.OrderData;
 import data.OrderTrack;
@@ -98,7 +99,7 @@ public class CreateANewOrderTest {
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
+        RestAssured.baseURI = ApiConfig.BASE_URL;
         RestAssured.filters(new AllureRestAssured());
 
     }

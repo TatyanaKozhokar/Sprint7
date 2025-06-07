@@ -1,5 +1,6 @@
 package tests.courier.login;
 
+import api.ApiConfig;
 import api.CourierApi;
 import data.CourierData;
 import data.CourierLoginResponse;
@@ -28,12 +29,7 @@ public class CourierLoginTest {
     @Before
     public void setUp() {
         courierData = new CourierData(faker.name().username(), faker.internet().password(6, 12), faker.name().firstName());
-        RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
-        createCourier();
-    }
-
-    @Step("Create new courier")
-    public void createCourier() {
+        RestAssured.baseURI = ApiConfig.BASE_URL;
         Response response = CourierApi.createCourier(courierData);
         response.then()
                 .statusCode(HttpStatus.SC_CREATED)

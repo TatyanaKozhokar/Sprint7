@@ -12,7 +12,7 @@ public class CourierApi {
                 .and()
                 .body(courierData)
                 .when()
-                .post(Endpoints.courier);
+                .post(Endpoints.COURIER);
     }
 
     public static Response login(CourierData courierData) {
@@ -21,14 +21,14 @@ public class CourierApi {
                 .and()
                 .body(courierData)
                 .when()
-                .post(Endpoints.login);
+                .post(Endpoints.LOGIN);
     }
 
     public static Response deleteCourier(int courierId) {
         return given()
                 .pathParam("id", courierId)
                 .when()
-                .delete(Endpoints.deleteCourier);
+                .delete(Endpoints.DELETE_COURIER);
     }
 
     public static Response requestWithoutRequiredField(CourierData courierWithTheWrongData) {
@@ -37,7 +37,7 @@ public class CourierApi {
                 .and()
                 .body(courierWithTheWrongData)
                 .when()
-                .post(Endpoints.login);
+                .post(Endpoints.LOGIN);
     }
 
     public static Response createCourierWithTheSameLogin(CourierData courierWithTheWrongData) {
@@ -46,7 +46,7 @@ public class CourierApi {
                 .and()
                 .body(courierWithTheWrongData)
                 .when()
-                .post(Endpoints.courier);
+                .post(Endpoints.COURIER);
     }
 }
 

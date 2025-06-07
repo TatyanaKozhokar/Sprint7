@@ -1,5 +1,6 @@
 package tests.courier.create;
 
+import api.ApiConfig;
 import api.CourierApi;
 import data.CourierData;
 import data.CourierDuplicateResponse;
@@ -24,8 +25,7 @@ public class CreateACourierTest {
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
-
+        RestAssured.baseURI = ApiConfig.BASE_URL;
     }
 
     @Step("Create new courier")

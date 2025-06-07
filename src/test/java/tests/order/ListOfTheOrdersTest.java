@@ -1,5 +1,6 @@
 package tests.order;
 
+import api.ApiConfig;
 import api.OrderApi;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -15,7 +16,7 @@ public class ListOfTheOrdersTest {
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
+        RestAssured.baseURI = ApiConfig.BASE_URL;
     }
 
     @Test

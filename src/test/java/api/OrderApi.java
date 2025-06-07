@@ -12,7 +12,7 @@ public class OrderApi {
                 .and()
                 .body(orderData)
                 .when()
-                .post(Endpoints.orders);
+                .post(Endpoints.ORDERS);
     }
 
     public static Response deleteAnOrder(int trackNumber) {
@@ -21,12 +21,12 @@ public class OrderApi {
                 .and()
                 .body(trackNumber)
                 .when()
-                .put(Endpoints.deleteCourier);
+                .put(Endpoints.DELETE_ORDER);
     }
 
     public static Response gettingTheListOfTheOrders() {
         return given()
                 .when()
-                .get(Endpoints.orders);
+                .get(Endpoints.ORDERS);
     }
 }
